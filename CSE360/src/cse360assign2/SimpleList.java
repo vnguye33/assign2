@@ -1,6 +1,6 @@
 package cse360assign2;
 /* Van Nguyen 
- * 2/10/20
+ * 2/27/20
  * Class ID# 430
  * 
  * This program will be testing different functions such as add, remove, search, toString, and count
@@ -21,43 +21,123 @@ public class SimpleList {
 	
 	// method where it adds an integer to the array
 	public void add(int number) {
+		
 		// if the count is equal to the length of the array then it will
 		//decrement the count. which is full
 		if(count == list.length) {
-			count--;
+			
+			//creating a new list where it takes half the size of the old list and added to 
+			//the old list itself
+			int biggerSize = list.length + (list.length / 2);
+			int[] bigList = new int[biggerSize];
+			
+			//putting the list from the old list to the bigger updated list and making it
+			//so the element will go to the new list when list is set equal to bigList
+			for(int ind = 0; ind < list.length; ind++) {
+				bigList[ind] = list[ind];
+			}
+			list = bigList;
 		}
+		count++;
+
 		// the for loop iterates through and check to see if the index
 		// is greater than 0 and decrements the index and setting the
 		// index + 1 to the list of array to hold the number and set it
 		// this is when it is not full
-		for(int ind = count-1; ind >=0; ind--) {
-			list[ind+1] = list[ind];
+		for(int ind = count-1; ind > 0; ind--) {
+			list[ind + 1] = list[ind];
 		}
 		// the first index is being set to the int number and increment the count
 		list[0] = number;
-		count++;
+		
 	}
 	
 	//method to remove an integer from the array. create a variable to search for the number 
 	// that will be remove in the for loop.
 	public void remove(int number) {
-		int place = search(number);
-		if(place != -1) {
-			//the for loop to the variable create that equals the number from the 
-			// search function and setting it to be it if it equals and decrement
-			// the count after the for loop
-			for(int ind = place; ind < count; ind++) {
-				list[ind] = list[ind++];
-			}
-			count--;
+		
+		// determining if the size of the list is less than 25% or not
+		// if it was, would decrease the size
+		if(list.length - count > (list.length * 0.25))
+		{
+			 int[] remList = new int [((int) (list.length - (list.length * 0.25)))];	
+		
+		//this will put the elements from the list to the new list which is updated with new size
+		for(int ind = 0; ind < list.length; ind++) {
+			remList[ind] = list[ind];
 		}
+		
+		//removing the element from the list and shifting the elements over to the left
+		for(int ind = search(number); ind < count; ind++) {
+			remList[ind] = remList[ind + 1];
+		}
+		//turns the number being remove to 0 and decrementing the count
+		remList[count - 1] = 0;
+		count--;
+
+	   }
+		//just removing the elementfrom the list and shifting the element over to the left
+		else {
+		for(int ind = search(number); ind < count; ind++) {
+			list[ind] = list[ind + 1];
+		}
+		list[count - 1] = 0;
+		count--;
+		}
+		
 	}
-	
 	//returns the count 
 	public int count() {
 		return count;
 	}
 	
+	public void append(int num) {
+		
+		//creating a new list where it takes half the size of the old list and added to 
+		//the old list itself
+			if(count == list.length) {
+				int biggerSize = list.length + (list.length / 2);
+				int[] bigList = new int[biggerSize];
+				
+				//putting the list from the old list to the bigger updated list and making it
+				//so the element will go to the new list when list is set equal to bigList
+				for(int ind = 0; ind < list.length; ind++) {
+					bigList[ind] = list[ind];
+				}
+				
+				bigList[count] = num;
+				count++;
+			}
+			//adding element to the end of the list
+			else {
+				list[count] = num;
+				count++;
+			}	
+	}
+	
+	public int first() {
+		//if the count is 0 menaing no element return -1
+		if(count == 0) {
+			return -1;
+		}
+		//return first element in list
+		return list[0];
+	}
+	
+	public int last() {
+		//if the count is 0 menaing no element return -1
+		if(count == 0) {
+			return -1;
+		}
+		//return last element in list
+		return list[count];		
+	}
+	
+	
+	public int size() {
+		//return the lenght of the list
+		return list.length;
+	}
 	// this will return the array of int as a list of strings.
 	//created a variable which is a string to be empty and that will 
 	// go through the loop to print each element in the array. if the index
@@ -65,7 +145,6 @@ public class SimpleList {
 	// array starting at 0 til the end. 
 	public String toString() {
 		String Str = "";
-		int len = count;
 		for(int ind = 0; ind < count; ind++) {
 			if(ind == count - 1) {
 				Str += list[ind] + "";
